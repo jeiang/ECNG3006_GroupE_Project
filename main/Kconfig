@@ -1,0 +1,4 @@
+config RUN_UNIT_TESTS
+	bool "Run unit tests instead of user_main."
+	help
+		"Select this to run Unity Unit Tests instead of user_main."
