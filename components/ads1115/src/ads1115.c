@@ -23,9 +23,9 @@ static const double ads1115_full_scale_values[]
         [ADS1115_PGAFSR_256_2] = 0.256, [ADS1115_PGAFSR_256_3] = 0.256 };
 
 static esp_err_t
-ads1115_read_register(ads1115_handle_t  *handle,
-                      ads1115_register_t reg,
-                      uint16_t          *data)
+ads1115_read_register(const ads1115_handle_t *handle,
+                      ads1115_register_t      reg,
+                      uint16_t               *data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -60,9 +60,9 @@ ads1115_read_register(ads1115_handle_t  *handle,
 }
 
 static esp_err_t
-ads1115_write_register(ads1115_handle_t  *handle,
-                       ads1115_register_t reg,
-                       uint16_t           data)
+ads1115_write_register(const ads1115_handle_t *handle,
+                       ads1115_register_t      reg,
+                       uint16_t                data)
 {
     i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -80,10 +80,10 @@ ads1115_write_register(ads1115_handle_t  *handle,
 }
 
 static esp_err_t
-ads1115_read_conf_reg_bits(ads1115_handle_t *handle,
-                           uint8_t           offset,
-                           uint8_t           mask,
-                           uint8_t          *data)
+ads1115_read_conf_reg_bits(const ads1115_handle_t *handle,
+                           uint8_t                 offset,
+                           uint8_t                 mask,
+                           uint8_t                *data)
 {
     uint16_t  result;
     esp_err_t ret = ads1115_read_register(handle, ADS1115_CONFIG_REG, &result);
@@ -95,10 +95,10 @@ ads1115_read_conf_reg_bits(ads1115_handle_t *handle,
 }
 
 static esp_err_t
-ads1115_write_conf_reg_bits(ads1115_handle_t *handle,
-                            uint8_t           offset,
-                            uint8_t           mask,
-                            uint8_t           data)
+ads1115_write_conf_reg_bits(const ads1115_handle_t *handle,
+                            uint8_t                 offset,
+                            uint8_t                 mask,
+                            uint8_t                 data)
 {
     uint16_t  result;
     esp_err_t ret = ads1115_read_register(handle, ADS1115_CONFIG_REG, &result);
@@ -112,14 +112,14 @@ ads1115_write_conf_reg_bits(ads1115_handle_t *handle,
 }
 
 esp_err_t
-ads1115_start_single_shot_conversion(ads1115_handle_t *handle)
+ads1115_start_single_shot_conversion(const ads1115_handle_t *handle)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_OS_OFFSET, ADS1115_OS_MASK, ADS1115_OS_FREE_START);
 }
 esp_err_t
-ads1115_get_conversion_status(ads1115_handle_t    *handle,
-                              ads1115_op_status_t *status)
+ads1115_get_conversion_status(const ads1115_handle_t *handle,
+                              ads1115_op_status_t    *status)
 {
     uint8_t   data;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -129,13 +129,15 @@ ads1115_get_conversion_status(ads1115_handle_t    *handle,
 }
 
 esp_err_t
-ads1115_set_input_pins(ads1115_handle_t *handle, ads1115_mux_t selected_pins)
+ads1115_set_input_pins(const ads1115_handle_t *handle,
+                       ads1115_mux_t           selected_pins)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)selected_pins);
 }
 esp_err_t
-ads1115_get_input_pins(ads1115_handle_t *handle, ads1115_mux_t *selected_pins)
+ads1115_get_input_pins(const ads1115_handle_t *handle,
+                       ads1115_mux_t          *selected_pins)
 {
     uint8_t   pins;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -145,15 +147,15 @@ ads1115_get_input_pins(ads1115_handle_t *handle, ads1115_mux_t *selected_pins)
 }
 
 esp_err_t
-ads1115_set_full_scale_gain(ads1115_handle_t    *handle,
-                            ads1115_full_scale_t full_scale_gain)
+ads1115_set_full_scale_gain(const ads1115_handle_t *handle,
+                            ads1115_full_scale_t    full_scale_gain)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)full_scale_gain);
 }
 esp_err_t
-ads1115_get_full_scale_gain(ads1115_handle_t     *handle,
-                            ads1115_full_scale_t *full_scale_gain)
+ads1115_get_full_scale_gain(const ads1115_handle_t *handle,
+                            ads1115_full_scale_t   *full_scale_gain)
 {
     uint8_t   gain;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -163,13 +165,13 @@ ads1115_get_full_scale_gain(ads1115_handle_t     *handle,
 }
 
 esp_err_t
-ads1115_set_mode(ads1115_handle_t *handle, ads1115_op_mode_t mode)
+ads1115_set_mode(const ads1115_handle_t *handle, ads1115_op_mode_t mode)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)mode);
 }
 esp_err_t
-ads1115_get_mode(ads1115_handle_t *handle, ads1115_op_mode_t *mode)
+ads1115_get_mode(const ads1115_handle_t *handle, ads1115_op_mode_t *mode)
 {
     uint8_t   raw_mode;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -179,13 +181,15 @@ ads1115_get_mode(ads1115_handle_t *handle, ads1115_op_mode_t *mode)
 }
 
 esp_err_t
-ads1115_set_data_rate(ads1115_handle_t *handle, ads1115_data_rate_t data_rate)
+ads1115_set_data_rate(const ads1115_handle_t *handle,
+                      ads1115_data_rate_t     data_rate)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)data_rate);
 }
 esp_err_t
-ads1115_get_data_rate(ads1115_handle_t *handle, ads1115_data_rate_t *data_rate)
+ads1115_get_data_rate(const ads1115_handle_t *handle,
+                      ads1115_data_rate_t    *data_rate)
 {
     uint8_t   raw_data_rate;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -195,13 +199,15 @@ ads1115_get_data_rate(ads1115_handle_t *handle, ads1115_data_rate_t *data_rate)
 }
 
 esp_err_t
-ads1115_set_comparator_mode(ads1115_handle_t *handle, ads1115_comp_mode_t mode)
+ads1115_set_comparator_mode(const ads1115_handle_t *handle,
+                            ads1115_comp_mode_t     mode)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)mode);
 }
 esp_err_t
-ads1115_get_comparator_mode(ads1115_handle_t *handle, ads1115_comp_mode_t *mode)
+ads1115_get_comparator_mode(const ads1115_handle_t *handle,
+                            ads1115_comp_mode_t    *mode)
 {
     uint8_t   raw_mode;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -211,14 +217,14 @@ ads1115_get_comparator_mode(ads1115_handle_t *handle, ads1115_comp_mode_t *mode)
 }
 
 esp_err_t
-ads1115_set_comparator_polarity(ads1115_handle_t       *handle,
+ads1115_set_comparator_polarity(const ads1115_handle_t *handle,
                                 ads1115_comp_polarity_t polarity)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)polarity);
 }
 esp_err_t
-ads1115_get_comparator_polarity(ads1115_handle_t        *handle,
+ads1115_get_comparator_polarity(const ads1115_handle_t  *handle,
                                 ads1115_comp_polarity_t *polarity)
 {
     uint8_t   raw_polarity;
@@ -229,15 +235,15 @@ ads1115_get_comparator_polarity(ads1115_handle_t        *handle,
 }
 
 esp_err_t
-ads1115_set_comparator_latch(ads1115_handle_t    *handle,
-                             ads1115_comp_latch_t latch)
+ads1115_set_comparator_latch(const ads1115_handle_t *handle,
+                             ads1115_comp_latch_t    latch)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)latch);
 }
 esp_err_t
-ads1115_get_comparator_latch(ads1115_handle_t     *handle,
-                             ads1115_comp_latch_t *latch)
+ads1115_get_comparator_latch(const ads1115_handle_t *handle,
+                             ads1115_comp_latch_t   *latch)
 {
     uint8_t   raw_latch;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -247,15 +253,15 @@ ads1115_get_comparator_latch(ads1115_handle_t     *handle,
 }
 
 esp_err_t
-ads1115_set_comparator_queue(ads1115_handle_t    *handle,
-                             ads1115_comp_queue_t queue)
+ads1115_set_comparator_queue(const ads1115_handle_t *handle,
+                             ads1115_comp_queue_t    queue)
 {
     return ads1115_write_conf_reg_bits(
         handle, ADS1115_MUX_OFFSET, ADS1115_MUX_MASK, (uint8_t)queue);
 }
 esp_err_t
-ads1115_get_comparator_queue(ads1115_handle_t     *handle,
-                             ads1115_comp_queue_t *queue)
+ads1115_get_comparator_queue(const ads1115_handle_t *handle,
+                             ads1115_comp_queue_t   *queue)
 {
     uint8_t   raw_queue;
     esp_err_t ret = ads1115_read_conf_reg_bits(
@@ -265,7 +271,7 @@ ads1115_get_comparator_queue(ads1115_handle_t     *handle,
 }
 
 esp_err_t
-ads1115_read_conversion_result(ads1115_handle_t *handle, int16_t *result)
+ads1115_read_conversion_result(const ads1115_handle_t *handle, int16_t *result)
 {
     uint16_t  raw_result;
     esp_err_t ret
@@ -283,7 +289,8 @@ ads1115_read_conversion_result(ads1115_handle_t *handle, int16_t *result)
 }
 
 esp_err_t
-ads1115_estimate_absolute_reading(ads1115_handle_t *handle, double *result)
+ads1115_estimate_absolute_reading(const ads1115_handle_t *handle,
+                                  double                 *result)
 {
     ads1115_full_scale_t full_scale_setting;
     esp_err_t ret = ads1115_get_full_scale_gain(handle, &full_scale_setting);
@@ -298,7 +305,7 @@ ads1115_estimate_absolute_reading(ads1115_handle_t *handle, double *result)
 }
 
 esp_err_t
-ads1115_get_low_threshold(ads1115_handle_t *handle, int16_t *result)
+ads1115_get_low_threshold(const ads1115_handle_t *handle, int16_t *result)
 {
     uint16_t  raw_result;
     esp_err_t ret
@@ -316,7 +323,7 @@ ads1115_get_low_threshold(ads1115_handle_t *handle, int16_t *result)
 }
 
 esp_err_t
-ads1115_set_low_threshold(ads1115_handle_t *handle, int16_t result)
+ads1115_set_low_threshold(const ads1115_handle_t *handle, int16_t result)
 {
     uint16_t two_comp_result;
     if (result < 0)
@@ -333,7 +340,7 @@ ads1115_set_low_threshold(ads1115_handle_t *handle, int16_t result)
 }
 
 esp_err_t
-ads1115_get_high_threshold(ads1115_handle_t *handle, int16_t *result)
+ads1115_get_high_threshold(const ads1115_handle_t *handle, int16_t *result)
 {
     uint16_t  raw_result;
     esp_err_t ret
@@ -351,7 +358,7 @@ ads1115_get_high_threshold(ads1115_handle_t *handle, int16_t *result)
 }
 
 esp_err_t
-ads1115_set_high_threshold(ads1115_handle_t *handle, int16_t result)
+ads1115_set_high_threshold(const ads1115_handle_t *handle, int16_t result)
 {
     uint16_t two_comp_result;
     if (result < 0)
