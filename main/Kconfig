@@ -1,4 +1,9 @@
+menu "App Main"
+
 config RUN_UNIT_TESTS
 	bool "Run unit tests instead of user_main."
+	default n
 	help
 		"Select this to run Unity Unit Tests instead of user_main."
+
+endmenu
