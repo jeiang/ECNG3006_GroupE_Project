@@ -10,10 +10,8 @@
 #define TEST_USERMAIN_H
 
 #include "unity.h"
-#include "user_main.h"
 #include "unity_config.h"
 #include "test_utils.h"
-#include <stdint.h>
-#include "esp_log.h"
+#include "user_main.h"
 
 #endif // TEST_USERMAIN_H
