@@ -97,12 +97,12 @@ typedef enum
 typedef enum
 {
     /**
-     * @brief When reading, device is not performing a conversion. When writing,
+     * @brief When reading, device is performing a conversion. When writing,
      * no effect.
      */
     ADS1115_OS_BUSY = 0,
     /**
-     * @brief When reading, device is performing a conversion. When writing,
+     * @brief When reading, device is not performing a conversion. When writing,
      * starts a conversion in single shot mode.
      */
     ADS1115_OS_FREE_START,
@@ -355,9 +355,9 @@ typedef struct
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-static esp_err_t ads1115_read_register(ads1115_handle_t  *handle,
-                                       ads1115_register_t reg,
-                                       uint16_t          *data);
+static esp_err_t ads1115_read_register(const ads1115_handle_t *handle,
+                                       ads1115_register_t      reg,
+                                       uint16_t               *data);
 
 /**
  * @brief Write to a register on the ADS1115
@@ -368,9 +368,9 @@ static esp_err_t ads1115_read_register(ads1115_handle_t  *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-static esp_err_t ads1115_write_register(ads1115_handle_t  *handle,
-                                        ads1115_register_t reg,
-                                        uint16_t           data);
+static esp_err_t ads1115_write_register(const ads1115_handle_t *handle,
+                                        ads1115_register_t      reg,
+                                        uint16_t                data);
 
 /**
  * @brief Read only certain bits from the config register
@@ -382,10 +382,10 @@ static esp_err_t ads1115_write_register(ads1115_handle_t  *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-static esp_err_t ads1115_read_conf_reg_bits(ads1115_handle_t *handle,
-                                            uint8_t           offset,
-                                            uint8_t           mask,
-                                            uint8_t          *data);
+static esp_err_t ads1115_read_conf_reg_bits(const ads1115_handle_t *handle,
+                                            uint8_t                 offset,
+                                            uint8_t                 mask,
+                                            uint8_t                *data);
 
 /**
  * @brief Write to only certain bits of the config register
@@ -397,10 +397,10 @@ static esp_err_t ads1115_read_conf_reg_bits(ads1115_handle_t *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-static esp_err_t ads1115_write_conf_reg_bits(ads1115_handle_t *handle,
-                                             uint8_t           offset,
-                                             uint8_t           mask,
-                                             uint8_t           data);
+static esp_err_t ads1115_write_conf_reg_bits(const ads1115_handle_t *handle,
+                                             uint8_t                 offset,
+                                             uint8_t                 mask,
+                                             uint8_t                 data);
 
 /**
  * @brief Start a one shot conversion
@@ -409,7 +409,7 @@ static esp_err_t ads1115_write_conf_reg_bits(ads1115_handle_t *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_start_single_shot_conversion(ads1115_handle_t *handle);
+esp_err_t ads1115_start_single_shot_conversion(const ads1115_handle_t *handle);
 
 /**
  * @brief Check whether the ADS1115 is currently converting an analog reading.
@@ -419,19 +419,20 @@ esp_err_t ads1115_start_single_shot_conversion(ads1115_handle_t *handle);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_conversion_status(ads1115_handle_t    *handle,
-                                        ads1115_op_status_t *status);
+esp_err_t ads1115_get_conversion_status(const ads1115_handle_t *handle,
+                                        ads1115_op_status_t    *status);
 
 /**
  * @brief Set the input pins to ADS1115
  * @param handle handle to the port and address for the ADS1115
- * @param selected_pins pins mux option to select which pins are to be used as input
+ * @param selected_pins pins mux option to select which pins are to be used as
+ * input
  * @return
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_input_pins(ads1115_handle_t *handle,
-                                 ads1115_mux_t     selected_pins);
+esp_err_t ads1115_set_input_pins(const ads1115_handle_t *handle,
+                                 ads1115_mux_t           selected_pins);
 
 /**
  * @brief Reads which pins are set as input
@@ -441,18 +442,19 @@ esp_err_t ads1115_set_input_pins(ads1115_handle_t *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_input_pins(ads1115_handle_t *handle,
-                                 ads1115_mux_t    *selected_pins);
+esp_err_t ads1115_get_input_pins(const ads1115_handle_t *handle,
+                                 ads1115_mux_t          *selected_pins);
 
 /**
- * @brief Set the full scale gain of the programmable gain amplifier of the ADS1115
+ * @brief Set the full scale gain of the programmable gain amplifier of the
+ * ADS1115
  * @param handle handle to the port and address for the ADS1115
  * @return
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_full_scale_gain(ads1115_handle_t    *handle,
-                                      ads1115_full_scale_t full_scale_gain);
+esp_err_t ads1115_set_full_scale_gain(const ads1115_handle_t *handle,
+                                      ads1115_full_scale_t    full_scale_gain);
 
 /**
  * @brief Read the full scale gain
@@ -461,17 +463,19 @@ esp_err_t ads1115_set_full_scale_gain(ads1115_handle_t    *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_full_scale_gain(ads1115_handle_t     *handle,
-                                      ads1115_full_scale_t *full_scale_gain);
+esp_err_t ads1115_get_full_scale_gain(const ads1115_handle_t *handle,
+                                      ads1115_full_scale_t   *full_scale_gain);
 
 /**
- * @brief Set the ADS1115 to either continuous operating mode or single shot mode
+ * @brief Set the ADS1115 to either continuous operating mode or single shot
+ * mode
  * @param handle handle to the port and address for the ADS1115
  * @return
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_mode(ads1115_handle_t *handle, ads1115_op_mode_t mode);
+esp_err_t ads1115_set_mode(const ads1115_handle_t *handle,
+                           ads1115_op_mode_t       mode);
 
 /**
  * @brief Check whether the ADS1115 is in single shot mode or continuous mode
@@ -480,7 +484,8 @@ esp_err_t ads1115_set_mode(ads1115_handle_t *handle, ads1115_op_mode_t mode);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_mode(ads1115_handle_t *handle, ads1115_op_mode_t *mode);
+esp_err_t ads1115_get_mode(const ads1115_handle_t *handle,
+                           ads1115_op_mode_t      *mode);
 
 /**
  * @brief Set the sampling rate of the ADS1115
@@ -489,8 +494,8 @@ esp_err_t ads1115_get_mode(ads1115_handle_t *handle, ads1115_op_mode_t *mode);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_data_rate(ads1115_handle_t   *handle,
-                                ads1115_data_rate_t data_rate);
+esp_err_t ads1115_set_data_rate(const ads1115_handle_t *handle,
+                                ads1115_data_rate_t     data_rate);
 
 /**
  * @brief Check the sampling rate of the ADS1115
@@ -499,8 +504,8 @@ esp_err_t ads1115_set_data_rate(ads1115_handle_t   *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_data_rate(ads1115_handle_t    *handle,
-                                ads1115_data_rate_t *data_rate);
+esp_err_t ads1115_get_data_rate(const ads1115_handle_t *handle,
+                                ads1115_data_rate_t    *data_rate);
 
 /**
  * @brief Set the comparator to either windowed or traditional
@@ -509,8 +514,8 @@ esp_err_t ads1115_get_data_rate(ads1115_handle_t    *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_comparator_mode(ads1115_handle_t   *handle,
-                                      ads1115_comp_mode_t mode);
+esp_err_t ads1115_set_comparator_mode(const ads1115_handle_t *handle,
+                                      ads1115_comp_mode_t     mode);
 
 /**
  * @brief
@@ -519,8 +524,8 @@ esp_err_t ads1115_set_comparator_mode(ads1115_handle_t   *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_comparator_mode(ads1115_handle_t    *handle,
-                                      ads1115_comp_mode_t *mode);
+esp_err_t ads1115_get_comparator_mode(const ads1115_handle_t *handle,
+                                      ads1115_comp_mode_t    *mode);
 
 /**
  * @brief
@@ -529,7 +534,7 @@ esp_err_t ads1115_get_comparator_mode(ads1115_handle_t    *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_comparator_polarity(ads1115_handle_t       *handle,
+esp_err_t ads1115_set_comparator_polarity(const ads1115_handle_t *handle,
                                           ads1115_comp_polarity_t polarity);
 
 /**
@@ -539,7 +544,7 @@ esp_err_t ads1115_set_comparator_polarity(ads1115_handle_t       *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_comparator_polarity(ads1115_handle_t        *handle,
+esp_err_t ads1115_get_comparator_polarity(const ads1115_handle_t  *handle,
                                           ads1115_comp_polarity_t *polarity);
 
 /**
@@ -549,8 +554,8 @@ esp_err_t ads1115_get_comparator_polarity(ads1115_handle_t        *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_comparator_latch(ads1115_handle_t    *handle,
-                                       ads1115_comp_latch_t latch);
+esp_err_t ads1115_set_comparator_latch(const ads1115_handle_t *handle,
+                                       ads1115_comp_latch_t    latch);
 
 /**
  * @brief
@@ -559,8 +564,8 @@ esp_err_t ads1115_set_comparator_latch(ads1115_handle_t    *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_comparator_latch(ads1115_handle_t     *handle,
-                                       ads1115_comp_latch_t *latch);
+esp_err_t ads1115_get_comparator_latch(const ads1115_handle_t *handle,
+                                       ads1115_comp_latch_t   *latch);
 
 /**
  * @brief
@@ -569,8 +574,8 @@ esp_err_t ads1115_get_comparator_latch(ads1115_handle_t     *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_comparator_queue(ads1115_handle_t    *handle,
-                                       ads1115_comp_queue_t queue);
+esp_err_t ads1115_set_comparator_queue(const ads1115_handle_t *handle,
+                                       ads1115_comp_queue_t    queue);
 
 /**
  * @brief
@@ -579,8 +584,8 @@ esp_err_t ads1115_set_comparator_queue(ads1115_handle_t    *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_comparator_queue(ads1115_handle_t     *handle,
-                                       ads1115_comp_queue_t *queue);
+esp_err_t ads1115_get_comparator_queue(const ads1115_handle_t *handle,
+                                       ads1115_comp_queue_t   *queue);
 
 /**
  * @brief
@@ -589,8 +594,8 @@ esp_err_t ads1115_get_comparator_queue(ads1115_handle_t     *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_read_conversion_result(ads1115_handle_t *handle,
-                                         int16_t          *result);
+esp_err_t ads1115_read_conversion_result(const ads1115_handle_t *handle,
+                                         int16_t                *result);
 
 /**
  * @brief
@@ -599,8 +604,8 @@ esp_err_t ads1115_read_conversion_result(ads1115_handle_t *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_estimate_absolute_reading(ads1115_handle_t *handle,
-                                            double           *result);
+esp_err_t ads1115_estimate_absolute_reading(const ads1115_handle_t *handle,
+                                            double                 *result);
 
 /**
  * @brief
@@ -609,7 +614,8 @@ esp_err_t ads1115_estimate_absolute_reading(ads1115_handle_t *handle,
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_low_threshold(ads1115_handle_t *handle, int16_t *result);
+esp_err_t ads1115_get_low_threshold(const ads1115_handle_t *handle,
+                                    int16_t                *result);
 
 /**
  * @brief
@@ -618,7 +624,8 @@ esp_err_t ads1115_get_low_threshold(ads1115_handle_t *handle, int16_t *result);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_low_threshold(ads1115_handle_t *handle, int16_t result);
+esp_err_t ads1115_set_low_threshold(const ads1115_handle_t *handle,
+                                    int16_t                 result);
 
 /**
  * @brief
@@ -627,7 +634,8 @@ esp_err_t ads1115_set_low_threshold(ads1115_handle_t *handle, int16_t result);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_get_high_threshold(ads1115_handle_t *handle, int16_t *result);
+esp_err_t ads1115_get_high_threshold(const ads1115_handle_t *handle,
+                                     int16_t                *result);
 
 /**
  * @brief
@@ -636,6 +644,7 @@ esp_err_t ads1115_get_high_threshold(ads1115_handle_t *handle, int16_t *result);
  *  - ESP_OK Success
  *  - ESP_ERR_INVALID_ARG Parameter error
  */
-esp_err_t ads1115_set_high_threshold(ads1115_handle_t *handle, int16_t result);
+esp_err_t ads1115_set_high_threshold(const ads1115_handle_t *handle,
+                                     int16_t                 result);
 
 #endif // ADS111X_H
